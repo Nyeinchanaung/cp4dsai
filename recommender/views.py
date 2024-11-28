@@ -7,14 +7,17 @@ import os
 import pickle
 import logging
 import numpy as np
+import joblib
 
 # Load the model and scaler from disk
 category_encoder_path = './mlmodel/category_encoder.pkl'
 k_mean_encoder_path = './mlmodel/k_mean_encoder.pkl'
 payment_encoder_path = './mlmodel/payment_encoder.pkl'
 percent_scaler_path = './mlmodel/percent_scaler.pkl'
-recommender_model_path = './mlmodel/recommender_model.pkl'
+recommender_model_path = './mlmodel/rf_model_compressed.pkl'
 state_encoder_path = './mlmodel/state_encoder.pkl'
+
+model = joblib.load('./mlmodel/rf_model_compressed.pkl')
 
 with open(percent_scaler_path, 'rb') as percent_scaler_model:
     percent_scaler = pickle.load(percent_scaler_model)
@@ -32,8 +35,8 @@ with open(category_encoder_path, 'rb') as category_encoder_model:
     category_encoder = pickle.load(category_encoder_model)
 
 
-with open(recommender_model_path, 'rb') as model:
-    recommender_model = pickle.load(model)
+# with open(recommender_model_path, 'rb') as model:
+#     recommender_model = pickle.load(model)
 
 
 def index(request):
@@ -61,7 +64,7 @@ def result(request):
         temp_X = np.array(X, dtype="object").reshape(1, -1)
 
         # Pass temp_X to model.predict
-        Category_list[category] = recommender_model.predict(temp_X)[0]
+        Category_list[category] = model.predict(temp_X)[0]
         recommended_product = sorted(Category_list.items(), key=lambda x:x[1], reverse=True)[:8]
         recommended_product_dict_array = [{"category": category, "value": value} for category, value in recommended_product]
         #recommended_product = sorted(Category_list.items(), key=lambda x:x[1], reverse=True)[:8]
