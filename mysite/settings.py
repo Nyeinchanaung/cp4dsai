@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['3.209.225.23', 'localhost', '127.0.0.1', '0.0.0.0']
 # Application definition
 
 INSTALLED_APPS = [
-    "bootstrap5",
+    "django_bootstrap5",
     "recommender.apps.RecommenderConfig",
     "django.contrib.admin",
     "django.contrib.auth",
